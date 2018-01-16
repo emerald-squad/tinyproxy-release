@@ -2,11 +2,56 @@
 
 set -exu -o pipefail
 
-apt-get update
-apt-get install -y tinyproxy
-sed -i 's#Allow 127.0.0.1#Allow 0.0.0.0/0#g' /etc/tinyproxy.conf
-sed -i 's#/var/log/tinyproxy/tinyproxy.log#/tmp/tinyproxy.log#g' /etc/tinyproxy.conf
-sed -i 's#/var/run/tinyproxy/tinyproxy.pid#/tmp/tinyproxy.pid#g' /etc/tinyproxy.conf
-sed -i 's#nobody#vcap#g' /etc/tinyproxy.conf
-sed -i 's#nogroup#vcap#g' /etc/tinyproxy.conf
-service tinyproxy restart
+CONFIG_DIR=/var/vcap/jobs/tinyproxy/config
+
+rm -rf ${CONFIG_DIR} || true
+mkdir -p ${CONFIG_DIR}
+
+cat > ${CONFIG_DIR}/default.html <<EOF
+Access denied.
+EOF
+
+<%
+if_p("tinyproxy.instances") do |instances|
+  instances.each do |instance|
+-%>
+cat > ${CONFIG_DIR}/<%= instance['name'] %>.conf <<EOF
+
+Allow <%= instance['allowed_cidr']%>
+ConnectPort 443
+ConnectPort 563
+MaxClients 100
+MaxRequestsPerChild 0
+MaxSpareServers 20
+MinSpareServers 5
+StartServers 10
+Timeout 600
+
+LogLevel Info
+User vcap
+Group vcap
+FilterExtended On
+FilterURLs Off
+FilterDefaultDeny Yes
+Filter "${CONFIG_DIR}/<%= instance['name'] %>.whitelist"
+DefaultErrorFile "${CONFIG_DIR}/default.html"
+Logfile "/var/vcap/sys/log/tinyproxy/tinyproxy-<%= instance['name'] %>.log"
+Pidfile "/var/vcap/sys/run/tinyproxy/tinyproxy-<%= instance['name']  %>.pid"
+Port <%= instance['port'] %>
+StatFile "/var/vcap/sys/run/tinyproxy/stats-<%= instance['name'] %>.html"
+ViaProxyName "proxy-<%= instance['name'] %>"
+
+EOF
+
+cat > "${CONFIG_DIR}/<%= instance['name'] %>.whitelist" <<EOF
+<%
+  instance['whitelisted_domains'].each do |whitelisted_domain|
+-%>
+<%= whitelisted_domain %>
+<% end -%>
+EOF
+
+<% 
+  end 
+end 
+%>

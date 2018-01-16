@@ -3,6 +3,9 @@
 SCRIPT_NAME=$(basename $0)
 JOB_DIR=/var/vcap/jobs/tinyproxy
 LOG_DIR=/var/vcap/sys/log/tinyproxy
+PID_DIR=/var/vcap/sys/run/tinyproxy
+CONFIG_DIR=/var/vcap/jobs/tinyproxy/config
+BIN_DIR=/var/vcap/packages/tinyproxy/sbin
 
 exec > >(tee -a >(logger -p user.info -t vcap.${SCRIPT_NAME}.stdout) | awk -W interactive '{ system("echo -n [$(date +\"%Y-%m-%d %H:%M:%S%z\")]"); print " " $0 }' >> ${LOG_DIR}/${SCRIPT_NAME}.log)
 exec 2> >(tee -a >(logger -p user.error -t vcap.${SCRIPT_NAME}.stderr) | awk -W interactive '{ system("echo -n [$(date +\"%Y-%m-%d %H:%M:%S%z\")]"); print " " $0 }' >> ${LOG_DIR}/${SCRIPT_NAME}.err.log)
@@ -11,13 +14,33 @@ function main() {
   case $1 in
 
     start)
-      echo "start: no-op"
+      echo "Start: fixing permissions if needed"
+      mkdir -p $PID_DIR
+      chown -R vcap.vcap $PID_DIR
+      
+      mkdir -p $LOG_DIR
+      chown -R vcap.vcap $LOG_DIR
 
+      pid=unset
+      for i in ${CONFIG_DIR}/*.conf; do
+        conf_name="$(echo $(basename $i)| sed 's@.conf$@@')"
+        echo "Starting $conf_name"
+        ${BIN_DIR}/tinyproxy -c $i
+        if [ "$pid" == "unset" ]; then
+          cat ${PID_DIR}/tinyproxy-${conf_name}.pid > ${PID_DIR}/pid # used by Monit only
+        fi
+      done
+        
       ;;
 
     stop)
-      echo "stop: no-op"
-
+      echo "stop: kill all tinyproxy"
+      for i in ${PID_DIR}/tinyproxy-*; do
+        kill $(cat ${i}) || true
+        rm -f $i
+      done
+      kill $(cat ${PID_DIR}/pid) || true
+      rm -f ${PID_DIR/pid}
 
       ;;
 

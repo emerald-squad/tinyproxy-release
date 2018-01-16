@@ -5,6 +5,22 @@ templates:
   pre-start.erb: bin/pre-start
   tinyproxy_ctl.erb: bin/tinyproxy_ctl
 
-packages: []
+packages:
+- tinyproxy
 
-properties: {}
+properties:
+  tinyproxy.instances:
+    default: []
+    example:
+      - name: mything
+        port: 8888
+        allowed_cidr: 0.0.0.0/0
+        whitelisted_domains:
+        - google.com
+        - amazon.com
+      - name: myotherthing
+        port: 8889
+        allowed_cidr: 0.0.0.0/0
+        whitelisted_domains:
+        - auth0.com
+    description: list of listening instances

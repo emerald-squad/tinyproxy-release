@@ -1,0 +1,43 @@
+---
+name: tinyproxy
+
+instance_groups:
+- name: tinyproxy
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+  networks: [{name: default}]
+  jobs:
+  - name: tinyproxy
+    release: tinyproxy
+    properties:
+      "tinyproxy":
+        instances: 
+          - name: inst1
+            port: 8088
+            allowed_cidr: 0.0.0.0/0
+            whitelisted_domains:
+            - auth0.com
+          - name: inst2
+            allowed_cidr: 0.0.0.0/0
+            port: 8089
+            whitelisted_domains:
+            - google.com
+            - google.ca
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+  serial: false
+
+stemcells:
+- alias: default
+  name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+  version: "3421.9"
+
+releases:
+  - name: tinyproxy
+    version: latest

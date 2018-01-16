@@ -1,0 +1,5 @@
+check process tinyproxy
+  with pidfile /var/vcap/sys/run/tinyproxy/pid
+  start program "/var/vcap/jobs/tinyproxy/bin/tinyproxy_ctl start"
+  stop program "/var/vcap/jobs/tinyproxy/bin/tinyproxy_ctl stop"
+  group vcap

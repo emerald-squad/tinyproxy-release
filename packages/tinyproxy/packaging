@@ -1,0 +1,10 @@
+# abort script on any command that exit with a non zero value
+set -e
+
+echo "Building tinyproxy"
+apt-get --no-install-recommends -y install asciidoc automake xsltproc
+pushd tinyproxy
+  ./autogen.sh --prefix=${BOSH_INSTALL_TARGET}
+  make
+  make install
+popd
