@@ -32,7 +32,7 @@ resources:
   source:
     user: emerald-squad
     repository: tinyproxy-release
-    access_token: ((tinyproxy-github-deploy-key))
+    access_token: {{github-access-token}}
 
 jobs:
 - name: shipit
@@ -54,7 +54,7 @@ jobs:
       RELEASE_ROOT: gh
       REPO_OUT: pushme
       NOTIFICATION_OUT: notifications
-      BRANCH: dev
+      BRANCH: master
       GITHUB_OWNER: emerald-squad
   - name: upload-git
     put: git-repo
