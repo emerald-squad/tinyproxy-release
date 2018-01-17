@@ -11,7 +11,6 @@ resources:
   type: git
   source:
     uri: git@github.com:emerald-squad/tinyproxy-release.git
-    private_key: {{github-key}}
 
 - name: notify
   type: slack-notification
@@ -26,14 +25,14 @@ resources:
     file: number
     initial_version: 1.0.0
     uri: git@github.com:emerald-squad/tinyproxy-release.git
-    private_key: {{github-key}}
+    private_key: ((tinyproxy-github-deploy-key))
 
 - name: github
   type: github-release
   source:
     user: emerald-squad
-    repository: tinyproxy-boshrelease
-    access_token: {{github-access-token}}
+    repository: tinyproxy-release
+    access_token: ((tinyproxy-github-deploy-key))
 
 jobs:
 - name: shipit
