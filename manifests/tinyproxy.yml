@@ -26,6 +26,11 @@ instance_groups:
             - google.com
             - google.ca
 
+stemcells:
+- alias: default
+  name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+  version: "3468.17"
+
 update:
   canaries: 1
   max_in_flight: 1
@@ -33,11 +38,8 @@ update:
   update_watch_time: 1000-30000
   serial: false
 
-stemcells:
-- alias: default
-  name: bosh-warden-boshlite-ubuntu-trusty-go_agent
-  version: "3421.9"
-
 releases:
   - name: tinyproxy
     version: latest
+
+
