@@ -24,7 +24,7 @@ fi
 VERSION=$(cat ${VERSION_FROM})
 if [[ -z ${VERSION} ]]; then
   echo >&2 "Version file (${VERSION_FROM}) was empty.  Did you misconfigure Concourse?"
-  exit 2final_name
+  exit 2
 fi
 
 if [[ ! -f ${REPO_ROOT}/ci/release_notes.md ]]; then
