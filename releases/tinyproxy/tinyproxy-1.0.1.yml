@@ -1,0 +1,15 @@
+name: tinyproxy
+version: 1.0.1
+commit_hash: b28c780
+uncommitted_changes: true
+jobs:
+- name: tinyproxy
+  version: d39e54e14e68f0adb8b28205be6c1bd338c397fc
+  fingerprint: d39e54e14e68f0adb8b28205be6c1bd338c397fc
+  sha1: aab81e5ee597ffec8457c4ec89fbc6c38cdf2254
+packages:
+- name: tinyproxy
+  version: c81098354fa39dd2f72333d961cd2bf0e44835b2
+  fingerprint: c81098354fa39dd2f72333d961cd2bf0e44835b2
+  sha1: 5eab93cac66fd28190eff0afddde75044ed40716
+  dependencies: []
