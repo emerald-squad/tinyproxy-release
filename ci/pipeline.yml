@@ -48,7 +48,7 @@ jobs:
     - get: git-repo
   - name: release
     task: release
-    file: git-repo/ci-local/tasks/release.yml
+    file: git-repo/ci/tasks/release.yml
     params:
       REPO_ROOT: git-repo
       VERSION_FROM: version/number

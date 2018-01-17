@@ -27,9 +27,9 @@ if [[ -z ${VERSION} ]]; then
   exit 2final_name
 fi
 
-if [[ ! -f ${REPO_ROOT}/ci-local/release_notes.md ]]; then
+if [[ ! -f ${REPO_ROOT}/ci/release_notes.md ]]; then
   pushd ${REPO_ROOT}
-    git show > ci-local/release_notes.md
+    git show > ci/release_notes.md
   popd
 fi
 
@@ -58,7 +58,7 @@ mkdir -p ${RELEASE_ROOT}/artifacts
 echo "v${VERSION}"                         > ${RELEASE_ROOT}/tag
 echo "v${VERSION}"                         > ${RELEASE_ROOT}/name
 mv ${REPO_ROOT}/releases/*/*-${VERSION}.tgz  ${RELEASE_ROOT}/artifacts
-mv ${REPO_ROOT}/ci-local/release_notes.md          ${RELEASE_ROOT}/notes.md
+mv ${REPO_ROOT}/ci/release_notes.md          ${RELEASE_ROOT}/notes.md
 cat >> ${RELEASE_ROOT}/notes.md <<EOF
 
 ### Deployment
