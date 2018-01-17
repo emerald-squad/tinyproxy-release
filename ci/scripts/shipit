@@ -45,6 +45,9 @@ git submodule update --init --recursive --force
 
 header "Create final release..."
 rm -rf .final_builds # remove unwanted stuff
+rm -rf /tmp/empty-blobstore
+mkdir -p /tmp/empty-blobstore
+
 bosh2 -n create-release --force --final --version "${VERSION}"
 bosh2 -n create-release --force releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.yml \
                       --tarball releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.tgz
