@@ -11,6 +11,8 @@ resources:
   type: git
   source:
     uri: git@github.com:emerald-squad/tinyproxy-release.git
+    branch: master
+    private_key: ((tinyproxy-github-deploy-key))
 
 - name: notify
   type: slack-notification
