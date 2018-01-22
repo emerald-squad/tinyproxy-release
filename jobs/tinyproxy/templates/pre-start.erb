@@ -27,7 +27,7 @@ MinSpareServers 5
 StartServers 10
 Timeout 600
 
-LogLevel Info
+LogLevel <%= p("tinyproxy.log_level") %>
 User vcap
 Group vcap
 FilterExtended On

@@ -9,6 +9,8 @@ packages:
 - tinyproxy
 
 properties:
+  tinyproxy.log_level:
+    default: Connect
   tinyproxy.instances:
     default: []
     example:
