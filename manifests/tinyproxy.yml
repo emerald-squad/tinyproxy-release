@@ -41,6 +41,6 @@ update:
 
 releases:
 - name: tinyproxy
-  version: 1.0.3
-  url: https://github.com/emerald-squad/tinyproxy-release/releases/download/v1.0.3/tinyproxy-1.0.3.tgz
-  sha1: eae616ff80e8dd1c0310761cdc9d24f6e4de0541
+  version: 1.0.5
+  url: https://github.com/emerald-squad/tinyproxy-release/releases/download/v1.0.5/tinyproxy-1.0.5.tgz
+  sha1: 6391d89e49a87aa1693dbe81a9ab4f0386885a97
