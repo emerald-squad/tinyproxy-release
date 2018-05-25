@@ -35,7 +35,7 @@ FilterURLs Off
 FilterDefaultDeny Yes
 Filter "${CONFIG_DIR}/<%= instance['name'] %>.whitelist"
 DefaultErrorFile "${CONFIG_DIR}/default.html"
-Logfile "/var/vcap/sys/log/tinyproxy/tinyproxy-<%= instance['name'] %>.log"
+Logfile "/var/vcap/sys/log/tinyproxy-<%= instance['name'] %>/tinyproxy.log"
 Pidfile "/var/vcap/sys/run/tinyproxy/tinyproxy-<%= instance['name']  %>.pid"
 Port <%= instance['port'] %>
 StatFile "/var/vcap/sys/run/tinyproxy/stats-<%= instance['name'] %>.html"

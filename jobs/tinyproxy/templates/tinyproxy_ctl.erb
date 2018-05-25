@@ -7,6 +7,9 @@ PID_DIR=/var/vcap/sys/run/tinyproxy
 CONFIG_DIR=/var/vcap/jobs/tinyproxy/config
 BIN_DIR=/var/vcap/packages/tinyproxy/sbin
 
+mkdir -p $LOG_DIR
+chown -R vcap.vcap $LOG_DIR
+
 exec > >(tee -a >(logger -p user.info -t vcap.${SCRIPT_NAME}.stdout) | awk -W interactive '{ system("echo -n [$(date +\"%Y-%m-%d %H:%M:%S%z\")]"); print " " $0 }' >> ${LOG_DIR}/${SCRIPT_NAME}.log)
 exec 2> >(tee -a >(logger -p user.error -t vcap.${SCRIPT_NAME}.stderr) | awk -W interactive '{ system("echo -n [$(date +\"%Y-%m-%d %H:%M:%S%z\")]"); print " " $0 }' >> ${LOG_DIR}/${SCRIPT_NAME}.err.log)
 
@@ -18,17 +21,29 @@ function main() {
       mkdir -p $PID_DIR
       chown -R vcap.vcap $PID_DIR
       
-      mkdir -p $LOG_DIR
-      chown -R vcap.vcap $LOG_DIR
-
       pid=unset
       for i in ${CONFIG_DIR}/*.conf; do
         conf_name="$(echo $(basename $i)| sed 's@.conf$@@')"
+        mkdir -p ${LOG_DIR}-${conf_name}
+        chown -R vcap.vcap ${LOG_DIR}-${conf_name}
         echo "Starting $conf_name"
         ${BIN_DIR}/tinyproxy -c $i
+
+        PID_FILE=${PID_DIR}/tinyproxy-${conf_name}.pid 
+
+        ## wait for PID_FILE to be created by tinyproxy, or fail
+        x=0
+        while [ "$x" -lt 100 -a ! -e $PID_FILE ]; do
+            x=$((x+1))
+            sleep .1
+        done
+        test -e $PID_FILE || exit 2
+
+        ## "pid" file is used by monit and is a copy of the first tinyproxy instance's PID
         if [ "$pid" == "unset" ]; then
-          cat ${PID_DIR}/tinyproxy-${conf_name}.pid > ${PID_DIR}/pid # used by Monit only
+          cp -a ${PID_FILE} ${PID_DIR}/pid
         fi
+        pid=set
       done
         
       ;;
