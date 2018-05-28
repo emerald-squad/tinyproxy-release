@@ -11,6 +11,8 @@ builds:
     version: 1.0.3
   adc24fbb-1a36-4767-623a-a4340ddb9303:
     version: 1.0.1
+  de361f90-9176-49cc-63af-f1779e7ba6f0:
+    version: 1.0.7
   efff4898-6bda-4cf5-64ea-adb56e7ecfea:
     version: 1.0.2
 format-version: "2"
